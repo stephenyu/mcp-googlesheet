@@ -85,10 +85,6 @@ Open the downloaded JSON file and note these values:
 
 ### 2.3 Configure Extension Settings
 
-You can configure the extension in two ways:
-
-#### Option 1: Using JSON File (Recommended)
-
 1. **Save the JSON file** to a secure location on your computer (e.g., `~/google-credentials/service-account-key.json`)
 
 2. **Test your credentials file** (optional but recommended):
@@ -100,15 +96,7 @@ You can configure the extension in two ways:
    - **Credentials JSON File Path**: `/path/to/your/service-account-key.json` (use the full path to your JSON file)
    - **Maximum Search Results**: `10` (or your preferred number)
 
-#### Option 2: Using Individual Fields
-
-1. **Extract the required fields** from your JSON file:
-   - **Service Account Email**: `claude-sheets-mcp@your-project-id.iam.gserviceaccount.com`
-   - **Private Key**: The complete `private_key` value from the JSON file (including `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`)
-   - **Project ID**: Your Google Cloud Project ID
-   - **Maximum Search Results**: `10` (or your preferred number)
-
-**Note**: The JSON file approach is recommended as it's easier to manage and less error-prone than manually copying individual fields. The extension will automatically extract the required fields from the JSON file.
+**Note**: The extension automatically extracts all required fields from the JSON file, making it easy to manage and less error-prone than manual configuration.
 
 ## Step 3: Share Google Sheets
 
