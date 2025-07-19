@@ -1,0 +1,68 @@
+{
+  "dxt_version": "0.1",
+  "name": "mcp-googlesheet",
+  "display_name": "Google Sheets MCP Extension",
+  "version": "1.0.0",
+  "description": "Access Google Sheets through MCP with service account authentication for large spreadsheet navigation",
+  "long_description": "This Desktop Extension provides seamless access to Google Sheets through the Model Context Protocol (MCP). It allows Claude to efficiently navigate large spreadsheets by first getting summaries and then retrieving specific sheet data as needed. The extension uses Google Service Account authentication for secure, reliable access to your Google Sheets data.\n\nFeatures include:\n- Get spreadsheet summaries with sheet names and metadata\n- Retrieve specific sheet data by name for targeted analysis\n- Efficient handling of large spreadsheets with many sheets\n- Automatic URL parsing to extract sheet IDs\n- Secure service account authentication\n- Real-time access to your Google Sheets data",
+  "author": {
+    "name": "Stephen Y",
+    "email": "YOUR_EMAIL@example.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/mcp-googlesheet"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/mcp-googlesheet",
+  "documentation": "https://github.com/YOUR_USERNAME/mcp-googlesheet#readme",
+  "support": "https://github.com/YOUR_USERNAME/mcp-googlesheet/issues",
+  "keywords": [
+    "google-sheets",
+    "spreadsheet",
+    "mcp",
+    "desktop-extension",
+    "claude",
+    "automation",
+    "xlsx"
+  ],
+  "license": "GPL-3.0-or-later",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
+      "env": {
+        "GOOGLE_CREDENTIALS_JSON_FILE": "${user_config.credentials_json_file}"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "get_spreadsheet_summary",
+      "description": "Get a summary of a Google spreadsheet including its name, number of sheets, and the names of those sheets. Input: spreadsheet URL. Output: title, sheet count, sheet names (metadata only, no data)."
+    },
+    {
+      "name": "get_spreadsheet_sheet_data",
+      "description": "Get the actual data from a specific sheet within a Google spreadsheet. Input: spreadsheet URL and sheet name. Output: the complete sheet data including all cell values."
+    }
+  ],
+  "user_config": {
+    "credentials_json_file": {
+      "type": "string",
+      "title": "Credentials JSON File Path",
+      "description": "Path to your Google Service Account JSON credentials file (e.g., /path/to/service-account-key.json). This file should contain all necessary authentication information including client_email, private_key, and project_id.",
+      "sensitive": false,
+      "required": true
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=0.12.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}
