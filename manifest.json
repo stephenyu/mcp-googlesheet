@@ -2,9 +2,9 @@
   "dxt_version": "0.1",
   "name": "mcp-googlesheet",
   "display_name": "Google Sheets MCP Extension",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Access Google Sheets through MCP with service account authentication for large spreadsheet navigation",
-  "long_description": "This Desktop Extension provides seamless access to Google Sheets through the Model Context Protocol (MCP). It allows Claude to efficiently navigate large spreadsheets by first getting summaries and then retrieving specific sheet data as needed. The extension uses Google Service Account authentication for secure, reliable access to your Google Sheets data.\n\nFeatures include:\n- Get spreadsheet summaries with sheet names and metadata\n- Retrieve specific sheet data by name for targeted analysis\n- Efficient handling of large spreadsheets with many sheets\n- Automatic URL parsing to extract sheet IDs\n- Secure service account authentication\n- Real-time access to your Google Sheets data",
+  "long_description": "Seamless access to Google Sheets through the MCP. It allows Claude to efficiently navigate large spreadsheets by first getting summaries and then retrieving specific sheet data as needed.",
   "author": {
     "name": "Stephen Yu"
   },
@@ -21,8 +21,6 @@
     "mcp",
     "desktop-extension",
     "claude",
-    "automation",
-    "xlsx"
   ],
   "license": "GPL-3.0-or-later",
   "server": {

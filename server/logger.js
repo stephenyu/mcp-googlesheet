@@ -7,7 +7,7 @@ export class Logger {
   _log(level, message, ...args) {
     const timestamp = new Date().toISOString();
     const prefix = `[${timestamp}] [${level.toUpperCase()}]`;
-    
+
     if (args.length > 0) {
       console.error(prefix, message, ...args);
     } else {
@@ -43,4 +43,4 @@ export class Logger {
   mcp(message, ...args) {
     this.debug(`[MCP] ${message}`, ...args);
   }
-} 
+}

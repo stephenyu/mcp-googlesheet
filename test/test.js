@@ -88,9 +88,7 @@ async function testSheetsService() {
       logger.info('Service initialization failed as expected:', error.message);
     }
 
-    // Test search files
-    const searchResults = await service.searchFiles('test');
-    logger.info('Search results:', searchResults);
+    // Test basic functionality (searchFiles method was removed as unused)
 
     logger.info('Sheets service test completed');
     return true;

@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@anthropic-ai/dxt": "^0.1.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.31.0",
     "prettier": "^3.6.2"
   },
   "engines": {
