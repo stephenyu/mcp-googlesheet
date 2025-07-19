@@ -25,7 +25,7 @@ A Claude Desktop Extension (DXT) that provides seamless access to Google Sheets 
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/mcp-googlesheet
+   git clone https://github.com/stephenyu/mcp-googlesheet
    cd mcp-googlesheet
    ```
 
@@ -130,7 +130,7 @@ The extension provides two complementary tools designed for efficient navigation
 ### Example Usage in Claude Desktop
 
 ```
-User: "Get an overview of this spreadsheet: https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit"
+User: "Get an overview of this spreadsheet: https://docs.google.com/spreadsheets/d/xyz/edit"
 Claude: [Uses get_spreadsheet_summary tool to show spreadsheet overview with sheet names]
 
 User: "Now get the data from the 'Class Data' sheet"
@@ -257,7 +257,11 @@ LOG_LEVEL=debug
 
 ## License
 
-MIT License - see LICENSE file for details
+GNU General Public License v3.0 or later - see LICENSE file for details
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 ## Support
 
