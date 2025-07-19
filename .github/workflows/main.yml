@@ -1,0 +1,114 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Extract version from package.json
+      id: extract_version
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION"
+        
+    - name: Build DXT package
+      run: npm run pack
+      
+    - name: Verify DXT file exists
+      run: |
+        if [ -f "mcp-googlesheet.dxt" ]; then
+          echo "✅ DXT file built successfully"
+          ls -la mcp-googlesheet.dxt
+        else
+          echo "❌ DXT file not found"
+          exit 1
+        fi
+        
+    - name: Check if tag exists
+      id: check_tag
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        TAG="v${{ steps.extract_version.outputs.version }}"
+        if git rev-parse "$TAG" >/dev/null 2>&1; then
+          echo "tag_exists=true" >> $GITHUB_OUTPUT
+          echo "Tag $TAG already exists"
+        else
+          echo "tag_exists=false" >> $GITHUB_OUTPUT
+          echo "Tag $TAG does not exist, will create release"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Create Release and Upload Asset (on main branch push)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && steps.check_tag.outputs.tag_exists == 'false'
+      run: |
+        TAG="v${{ steps.extract_version.outputs.version }}"
+        
+        # Create release with GitHub CLI
+        gh release create "$TAG" \
+          --title "Release $TAG" \
+          --notes "## MCP Google Sheets Extension $TAG
+
+        ### Features
+        - Access Google Sheets through MCP with service account authentication
+        - Get spreadsheet summaries with sheet names and metadata
+        - Retrieve specific sheet data by name for targeted analysis
+        - Efficient handling of large spreadsheets
+
+        ### Installation
+        Download the \`mcp-googlesheet.dxt\` file and install it in Claude Desktop.
+
+        ### Setup
+        See [SETUP.md](https://github.com/${{ github.repository }}/blob/main/SETUP.md) for configuration instructions.
+
+        **Full Changelog**: https://github.com/${{ github.repository }}/commits/$TAG" \
+          --latest \
+          "./mcp-googlesheet.dxt"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Create Release and Upload Asset (on tag push)
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        TAG="${{ github.ref_name }}"
+        
+        # Create release with GitHub CLI
+        gh release create "$TAG" \
+          --title "Release $TAG" \
+          --notes "## MCP Google Sheets Extension $TAG
+
+        ### Features
+        - Access Google Sheets through MCP with service account authentication
+        - Get spreadsheet summaries with sheet names and metadata
+        - Retrieve specific sheet data by name for targeted analysis
+        - Efficient handling of large spreadsheets
+
+        ### Installation
+        Download the \`mcp-googlesheet.dxt\` file and install it in Claude Desktop.
+
+        ### Setup
+        See [SETUP.md](https://github.com/${{ github.repository }}/blob/main/SETUP.md) for configuration instructions." \
+          --latest \
+          "./mcp-googlesheet.dxt"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
