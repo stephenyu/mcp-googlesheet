@@ -1,6 +1,6 @@
 {
   "name": "mcp-googlesheet",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Desktop Extension for Google Sheets access via MCP",
   "main": "server/index.js",
   "type": "module",
