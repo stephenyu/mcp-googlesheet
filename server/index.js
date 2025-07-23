@@ -177,15 +177,15 @@ server.registerTool(
           {
             type: 'text',
             text:
-              `**Google Sheet Data: ${sheetData.spreadsheetTitle} - ${sheetData.sheet.title}**\n\n` +
+              `**Google Sheet Data: ${sheetData.spreadsheetTitle} - ${sheetData.metadata.title}**\n\n` +
               `Spreadsheet ID: ${sheetData.spreadsheetId}\n` +
               `URL: ${sheetData.spreadsheetUrl}\n` +
-              `Sheet: ${sheetData.sheet.title}\n` +
-              `Size: ${sheetData.sheet.rowCount} rows × ${sheetData.sheet.columnCount} columns\n` +
+              `Sheet: ${sheetData.metadata.title}\n` +
+              `Size: ${sheetData.metadata.dimensions.rows} rows × ${sheetData.metadata.dimensions.columns} columns\n` +
               `Created: ${sheetData.metadata.createdTime}\n` +
               `Last modified: ${sheetData.metadata.modifiedTime}\n\n` +
-              '**Sheet Data:**\n' +
-              JSON.stringify(sheetData.sheet, null, 2),
+              `**Cell Data (${sheetData.cells.length} cells with data):**\n` +
+              JSON.stringify(sheetData, null, 2),
           },
         ],
       };

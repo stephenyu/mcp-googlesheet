@@ -38,11 +38,13 @@ Claude Desktop Extension for Google Sheets access via MCP (Model Context Protoco
 - [x] Remove old search and get_googlesheet tools
 - [x] **Fix Claude data understanding: Convert tools to return structured JSON data instead of binary XLSX**
 - [x] **Improve large spreadsheet handling: Split into summary and sheet-specific tools for better navigation**
+- [x] **Update data structure to 2D array format with enhanced type detection and formatting support**
 
 ## In Progress 🚧
 
 ### Phase 2: Testing & Quality Assurance
-- [ ] Test structured JSON data functionality with real Google Sheets
+- [x] **Updated data structure to 2D array format with position-based cells**
+- [ ] Test new 2D structure functionality with real Google Sheets
 - [ ] Verify URL parsing with various Google Sheets URL formats
 - [ ] Test error handling for invalid IDs and URLs
 - [ ] Performance testing of data retrieval
@@ -168,6 +170,7 @@ Claude Desktop Extension for Google Sheets access via MCP (Model Context Protoco
 - **Updated documentation** to reflect new functionality
 - **Created test suite** for XLSX functionality
 - **Split tools for large spreadsheet navigation**: Created `get_spreadsheet_summary` and `get_spreadsheet_sheet_data` tools for efficient handling of large spreadsheets with many sheets
+- **Updated to 2D array structure**: Changed cell data format from object keyed by address to array with position-based cells, including automatic type detection (string, number, currency, percentage, date, boolean) and separate raw values from formatted display values
 
 ## Progress Tracking
 

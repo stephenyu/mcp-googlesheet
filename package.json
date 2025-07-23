@@ -15,6 +15,7 @@
     "test:private-key": "node test/test-private-key.js",
     "test:xlsx": "node test/test-xlsx.js",
     "test:structured": "node test/test-structured-data.js",
+    "test:2d": "node test/test-2d-structure.js",
     "build": "echo 'No build step required for Node.js extension'",
     "lint": "eslint server/",
     "format": "prettier --write server/",

@@ -160,25 +160,23 @@ export class GoogleSheetsService {
       // Load cell data for the specific sheet
       await sheet.loadCells();
 
-      const sheetData = {
-        title: sheet.title,
-        index: sheet.index,
-        rowCount: sheet.rowCount,
-        columnCount: sheet.columnCount,
-        gridProperties: sheet.gridProperties,
-        cells: this.extractCellData(sheet),
-      };
+      // Extract cell data in new 2D array format
+      const extractedData = this.extractCellData(sheet);
 
       const result = {
         spreadsheetId: sheetId,
         spreadsheetTitle: doc.title,
         spreadsheetUrl: doc.spreadsheetUrl,
-        sheet: sheetData,
         metadata: {
+          title: extractedData.metadata.title,
+          dimensions: extractedData.metadata.dimensions,
           createdTime: doc.createdTime,
           modifiedTime: doc.modifiedTime,
           lastModifyingUser: doc.lastModifyingUser,
+          sheetIndex: sheet.index,
+          gridProperties: sheet.gridProperties,
         },
+        cells: extractedData.cells,
       };
 
       this.logger.info('Successfully retrieved specific sheet data');
@@ -192,10 +190,7 @@ export class GoogleSheetsService {
   }
 
   extractCellData(sheet) {
-    const cells = {};
-
-    // Iterate through all cells in the sheet
-    // sheet.cellStats contains the range of cells with data
+    const cells = [];
     const maxRow = sheet.rowCount;
     const maxCol = sheet.columnCount;
 
@@ -206,16 +201,19 @@ export class GoogleSheetsService {
         // Only include cells that have some content
         if (cell.value !== null && cell.value !== undefined && cell.value !== '' && 
             cell.formattedValue !== null && cell.formattedValue !== undefined && cell.formattedValue !== '') {
-          const cellAddress = `${this.columnToLetter(col + 1)}${row + 1}`;
-
+          
           const cellData = {
-            row: row + 1, // Convert to 1-based indexing
-            column: col + 1, // Convert to 1-based indexing
-            address: cellAddress,
-            value: cell.formattedValue, // Use formattedValue to get calculated results, not formulas
+            pos: [row + 1, col + 1], // Convert to 1-based indexing [row, column]
+            val: cell.value, // Raw value
+            type: this.detectCellType(cell)
           };
 
-          // Only include hyperlink as it could be considered data content
+          // Add formatted value if different from raw value
+          if (cell.formattedValue && cell.formattedValue !== cell.value) {
+            cellData.fmt = cell.formattedValue;
+          }
+
+          // Add hyperlink if present
           try {
             if (cell.hyperlink) {
               cellData.hyperlink = cell.hyperlink;
@@ -224,12 +222,66 @@ export class GoogleSheetsService {
             /* ignore */
           }
 
-          cells[cellAddress] = cellData;
+          cells.push(cellData);
         }
       }
     }
 
-    return cells;
+    return {
+      metadata: {
+        title: sheet.title,
+        dimensions: {
+          rows: maxRow,
+          columns: maxCol
+        }
+      },
+      cells: cells
+    };
+  }
+
+  /**
+   * Detect the type of a cell based on its value and formatting
+   * @param {Object} cell - Google Sheets cell object
+   * @returns {string} - Detected type: string, number, currency, percentage, date, boolean
+   */
+  detectCellType(cell) {
+    // Check if it's a boolean
+    if (typeof cell.value === 'boolean') {
+      return 'boolean';
+    }
+
+    // Check if it's a number
+    if (typeof cell.value === 'number') {
+      const formatted = cell.formattedValue || '';
+      
+      // Check for percentage
+      if (formatted.includes('%')) {
+        return 'percentage';
+      }
+      
+      // Check for currency symbols
+      if (formatted.match(/[$£€¥₹₽₩]/)) {
+        return 'currency';
+      }
+      
+      // Check for date patterns (basic detection)
+      if (formatted.match(/\d{1,2}\/\d{1,2}\/\d{2,4}|\d{1,2}-\d{1,2}-\d{2,4}/)) {
+        return 'date';
+      }
+      
+      return 'number';
+    }
+
+    // Check if string looks like a date
+    if (typeof cell.value === 'string') {
+      const datePattern = /\d{1,2}\/\d{1,2}\/\d{2,4}|\d{1,2}-\d{1,2}-\d{2,4}|\d{4}-\d{2}-\d{2}/;
+      if (datePattern.test(cell.value)) {
+        return 'date';
+      }
+    }
+
+    // Default to string for text and other types
+    return 'string';
   }
 
   /**
