@@ -203,81 +203,22 @@ export class GoogleSheetsService {
       for (let col = 0; col < maxCol; col++) {
         const cell = sheet.getCell(row, col);
 
-        // Only include cells that have some content or formatting
-        if (cell.value !== null && cell.value !== undefined && cell.value !== '') {
+        // Only include cells that have some content
+        if (cell.value !== null && cell.value !== undefined && cell.value !== '' && 
+            cell.formattedValue !== null && cell.formattedValue !== undefined && cell.formattedValue !== '') {
           const cellAddress = `${this.columnToLetter(col + 1)}${row + 1}`;
 
           const cellData = {
             row: row + 1, // Convert to 1-based indexing
             column: col + 1, // Convert to 1-based indexing
             address: cellAddress,
-            value: cell.value,
-            formattedValue: cell.formattedValue,
+            value: cell.formattedValue, // Use formattedValue to get calculated results, not formulas
           };
 
-          // Add optional properties if they exist, using safe property access
-          try {
-            if (cell.note) {
-              cellData.note = cell.note;
-            }
-          } catch {
-            /* ignore */
-          }
-
-          try {
-            const bgColor = cell.backgroundColor;
-            if (bgColor) {
-              cellData.backgroundColor = bgColor;
-            }
-          } catch {
-            /* ignore */
-          }
-
-          try {
-            const textFormat = cell.textFormat;
-            if (textFormat) {
-              cellData.textFormat = textFormat;
-            }
-          } catch {
-            /* ignore */
-          }
-
-          try {
-            if (cell.horizontalAlignment) {
-              cellData.horizontalAlignment = cell.horizontalAlignment;
-            }
-          } catch {
-            /* ignore */
-          }
-
-          try {
-            if (cell.verticalAlignment) {
-              cellData.verticalAlignment = cell.verticalAlignment;
-            }
-          } catch {
-            /* ignore */
-          }
-
-          try {
-            if (cell.textDirection) {
-              cellData.textDirection = cell.textDirection;
-            }
-          } catch {
-            /* ignore */
-          }
-
+          // Only include hyperlink as it could be considered data content
           try {
             if (cell.hyperlink) {
               cellData.hyperlink = cell.hyperlink;
-            }
-          } catch {
-            /* ignore */
-          }
-
-          try {
-            const numberFormat = cell.numberFormat;
-            if (numberFormat) {
-              cellData.numberFormat = numberFormat;
             }
           } catch {
             /* ignore */
